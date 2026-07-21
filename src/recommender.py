@@ -38,13 +38,40 @@ class Recommender:
     def __init__(self, songs: List[Song]):
         self.songs = songs
 
+    def _score(self, user: UserProfile, song: Song) -> Tuple[float, List[str]]:
+        """Scores a single Song object against a UserProfile, returning score and reasons."""
+        score = 0.0
+        reasons = []
+
+        if song.genre == user.favorite_genre:
+            score += 2.0
+            reasons.append("genre match (+2.0)")
+
+        if song.mood == user.favorite_mood:
+            score += 1.0
+            reasons.append("mood match (+1.0)")
+
+        energy_gap = abs(song.energy - user.target_energy)
+        energy_points = max(0.0, 1.0 - energy_gap)
+        score += energy_points
+        reasons.append(f"energy closeness (+{energy_points:.2f})")
+
+        if user.likes_acoustic and song.acousticness >= 0.6:
+            score += 0.5
+            reasons.append("acoustic bonus (+0.5)")
+
+        return score, reasons
+
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        """Scores every song against the user profile and returns the top k Song objects, highest first."""
+        scored = [(song, self._score(user, song)[0]) for song in self.songs]
+        ranked = sorted(scored, key=lambda x: x[1], reverse=True)
+        return [song for song, score in ranked[:k]]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        """Returns a human-readable explanation of why a song scored the way it did for this user."""
+        score, reasons = self._score(user, song)
+        return f"Score: {score:.2f} — " + ", ".join(reasons)
 
 def load_songs(csv_path: str) -> List[Dict]:
     """Loads songs from a CSV file into a list of dicts with numeric fields converted."""

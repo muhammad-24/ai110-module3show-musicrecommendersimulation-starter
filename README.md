@@ -2,16 +2,10 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This version simulates a content-based music recommender. Given a
+user's favorite genre, favorite mood, and target energy level, it
+scores every song in a 16-song catalog and returns the top 5 matches
+with plain-language reasons for each score.
 
 ---
 
@@ -44,6 +38,11 @@ grows).
 **Ranking:** every song in the catalog is scored this way, then sorted
 highest score to lowest, and the top k are returned as recommendations.
 
+**Expected bias:** this system relies on exact genre-string matching,
+so it may under-rank songs that are a good vibe fit but labeled with
+a different (though related) genre — e.g. "pop" and "indie pop" score
+as a complete mismatch even though they're musically close.
+
 ---
 
 ## Getting Started
@@ -52,21 +51,22 @@ highest score to lowest, and the top k are returned as recommendations.
 
 1. Create a virtual environment (optional but recommended):
 
-   ```bash
+```bash
    python -m venv .venv
    source .venv/bin/activate      # Mac or Linux
    .venv\Scripts\activate         # Windows
+```
 
 2. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+   pip install -r requirements.txt
 ```
 
 3. Run the app:
 
 ```bash
-python -m src.main
+   python -m src.main
 ```
 
 ### Running Tests
@@ -74,7 +74,7 @@ python -m src.main
 Run the starter tests with:
 
 ```bash
-pytest
+python -m pytest
 ```
 
 You can add more tests in `tests/test_recommender.py`.
@@ -83,7 +83,6 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-​
 Top recommendations:
 Sunrise City - Score: 3.98
 Because: ['genre match (+2.0)', 'mood match (+1.0)', 'energy closeness (+0.98)']
@@ -102,23 +101,26 @@ Because: ['energy closeness (+0.95)']
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+Doubled the weight on energy closeness (1.0 → 2.0) and halved the
+genre match weight (2.0 → 1.0) for the Happy Pop profile. Sunrise
+City stayed #1 either way, but songs with no genre match and good
+mood/energy fit (Rooftop Lights, Electric Bloom) jumped above Gym
+Hero, which had a genre match but the wrong mood. This showed the
+ranking is sensitive to weight choices, not just the underlying data.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
+- Works on a tiny catalog (16 songs), so most genres have only 1-2
+  entries, limiting real variety in results.
+- Genre matching is exact-string only — no partial credit for related
+  genres like "pop" vs "indie pop."
+- Has no concept of low confidence — it always returns a top 5 even
+  when no song is really a good match (see the EDM+Sad test in
+  model_card.md).
+- Does not use lyrics, audio, or listening history — only hand-labeled
+  attributes.
 
 You will go deeper on this in your model card.
 
@@ -130,10 +132,13 @@ Read and complete `model_card.md`:
 
 [**Model Card**](model_card.md)
 
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
+This project showed how a recommender turns raw data into a
+prediction: it's really just arithmetic (point additions and sorting)
+dressed up as "taste understanding." The scoring weights are design
+choices, not objective truths — changing them changed the ranking
+without changing the underlying data at all. Bias shows up in what the
+system can't express: it has no way to say "I don't have a good match
+for you," and its exact-string genre matching means musically similar
+but differently-labeled songs get treated as complete mismatches.
 
 
