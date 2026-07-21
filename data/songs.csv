@@ -9,3 +9,9 @@ id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
 8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
 9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
 10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
+11,Desert Bloom,Sable Wren,folk,warm,0.45,95,0.68,0.50,0.75
+12,Neon Riot,Voltline,punk,intense,0.95,168,0.40,0.60,0.05
+13,Slow Tide,Coral Drift,rnb,relaxed,0.33,68,0.62,0.55,0.60
+14,Electric Bloom,Orbit Bloom,electropop,happy,0.70,122,0.80,0.75,0.20
+15,Late Bus Home,Paper Lanterns,folk,melancholy,0.30,66,0.35,0.40,0.80
+16,Bass Drop Riot,Max Pulse,edm,intense,0.97,140,0.72,0.90,0.03

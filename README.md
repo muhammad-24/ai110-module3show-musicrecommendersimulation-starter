@@ -17,17 +17,32 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real platforms like Spotify use two main approaches. Collaborative
+filtering predicts what you'll like based on what similar users liked
+(e.g. "people who liked X also liked Y"), using no info about the song
+itself. Content-based filtering predicts what you'll like based on the
+song's own attributes (genre, tempo, energy, mood) compared to your
+taste profile. Most real systems combine both; collaborative filtering
+handles discovery and cold start, content-based handles fine-grained
+"vibe" matching.
 
-Some prompts to answer:
+This simulation is a content-based recommender only. It has no
+knowledge of other users — it only compares song attributes to a
+single taste profile.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+**Song features used:** genre, mood, energy, tempo_bpm, valence,
+danceability, acousticness
 
-You can include a simple diagram or bullet list if helpful.
+**UserProfile features used:** favorite genre, favorite mood, target
+energy
+
+**Scoring:** each song gets +2.0 for a genre match, +1.0 for a mood
+match, and up to +1.0 more based on how close its energy is to the
+user's target energy (full points at 0 gap, scaling down as the gap
+grows).
+
+**Ranking:** every song in the catalog is scored this way, then sorted
+highest score to lowest, and the top k are returned as recommendations.
 
 ---
 
@@ -68,16 +83,18 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
-
-```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
-```
+​
+Top recommendations:
+Sunrise City - Score: 3.98
+Because: ['genre match (+2.0)', 'mood match (+1.0)', 'energy closeness (+0.98)']
+Gym Hero - Score: 2.87
+Because: ['genre match (+2.0)', 'energy closeness (+0.87)']
+Rooftop Lights - Score: 1.96
+Because: ['mood match (+1.0)', 'energy closeness (+0.96)']
+Electric Bloom - Score: 1.90
+Because: ['mood match (+1.0)', 'energy closeness (+0.90)']
+Night Drive Loop - Score: 0.95
+Because: ['energy closeness (+0.95)']
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 
